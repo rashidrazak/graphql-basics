@@ -33,7 +33,7 @@ const users = [
  */
 const typeDefs = `
   type Query {
-    users: [User!]!
+    users(query: String): [User!]!
     me: User!
     post: Post!
   }
@@ -60,7 +60,12 @@ const typeDefs = `
 const resolvers = {
   Query: {
     users(parent, args, ctx, info) {
-      return users
+      if (!args.query) return users
+
+      // Filter user's name. Return user if name contains letter specified in query (case insensitive)
+      return users.filter((user) => {
+        return user.name.toLowerCase().includes(args.query.toLowerCase())
+      })
     },
     me() {
       return {
