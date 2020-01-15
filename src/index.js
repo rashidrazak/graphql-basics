@@ -5,6 +5,7 @@ import { GraphQLServer } from 'graphql-yoga'
  */
 const typeDefs = `
   type Query {
+    greeting(name: String) : String!
     me: User!
     post: Post!
   }
@@ -30,6 +31,15 @@ const typeDefs = `
  */
 const resolvers = {
   Query: {
+    greeting(parent, args, ctx, info) {
+      console.log(args)
+
+      if (args.name) {
+        return `Hello, ${args.name}!`
+      }
+      
+      return 'Hello!'
+    },
     me() {
       return {
         id: '123098',
