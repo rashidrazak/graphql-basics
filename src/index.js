@@ -9,6 +9,7 @@ import posts from './posts'
 const typeDefs = `
   type Query {
     users(query: String): [User!]!
+    posts(query: String): [Post]!
     me: User!
     post: Post!
   }
@@ -40,6 +41,15 @@ const resolvers = {
       // Filter user's name. Return user if name contains letter specified in query (case insensitive)
       return users.filter((user) => {
         return user.name.toLowerCase().includes(args.query.toLowerCase())
+      })
+    },
+    posts(parent, args, ctx, info) {
+      if (!args.query) return posts
+
+      return posts.filter((post) => {
+        const isTitleMatch = post.title.toLowerCase().includes(args.query.toLowerCase())
+        const isBodyMatch = post.body.toLowerCase().includes(args.query.toLowerCase())
+        return isTitleMatch || isBodyMatch
       })
     },
     me() {
