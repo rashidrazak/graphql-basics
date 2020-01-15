@@ -9,7 +9,7 @@ import posts from './posts'
 const typeDefs = `
   type Query {
     users(query: String): [User!]!
-    posts(query: String): [Post]!
+    posts(query: String): [Post!]!
     me: User!
     post: Post!
   }
@@ -19,6 +19,7 @@ const typeDefs = `
     name: String!
     email: String!
     age: Int
+    posts: [Post!]!
   }
 
   type Post {
@@ -74,6 +75,13 @@ const resolvers = {
     author(parent, args, ctx, info) {
       return users.find((user) => {
         return user.id === parent.author
+      })
+    }
+  },
+  User: {
+    posts(parent, args, ctx, info) {
+      return posts.filter((post) => {
+        return post.author === parent.id
       })
     }
   }
