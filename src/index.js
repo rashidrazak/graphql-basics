@@ -98,12 +98,7 @@ const resolvers = {
       const isEmailAvailable = !users.some(user => user.email === args.email)
       if (!isEmailAvailable) throw new Error(`This email is taken`)
 
-      const newUser = {
-        id: uuidv4(),
-        name: args.name,
-        email: args.email,
-        age: args.age
-      }
+      const newUser = { id: uuidv4(), ...args }
 
       users.push(newUser)
       console.log(users)
@@ -113,16 +108,9 @@ const resolvers = {
       const userExists = users.some(user => user.id === args.author)
       if (!userExists) throw new Error(`User not found`)
 
-      const newPost = {
-        id: uuidv4(),
-        title: args.title,
-        body: args.body,
-        published: args.published,
-        author: args.author
-      }
+      const newPost = { id: uuidv4(), ...args }
 
       posts.push(newPost)
-      console.log(newPost)
       return newPost
     },
     createComment(parent, args, ctx, info) {
@@ -131,16 +119,9 @@ const resolvers = {
       const postExists = posts.some(post => post.id === args.post && post.published)
       if (!postExists) throw new Error(`Post not found`)
 
-      const newComment = {
-        id: uuidv4(),
-        text: args.text,
-        author: args.author,
-        published: args.published,
-        post: args.post
-      }
+      const newComment = { id: uuidv4(), ...args }
 
       comments.push(newComment)
-      console.log(newComment)
       return newComment
     }
   },
