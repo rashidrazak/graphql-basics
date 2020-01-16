@@ -18,9 +18,15 @@ const typeDefs = `
   }
 
   type Mutation {
-    createUser(name: String!, email: String!, age: Int): User!
+    createUser(data: CreateUserInput): User!
     createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
     createComment(text: String, author: ID!, published: Boolean!, post: ID!): Comment!
+  }
+
+  input CreateUserInput {
+    name: String!
+    email: String!
+    age: Int
   }
 
   type User {
@@ -94,11 +100,11 @@ const resolvers = {
   },
   Mutation: {
     createUser(parent, args, ctx, info) {
-      if (!args.name && !args.email) throw new Error(`Required parameters not provided`)
-      const isEmailAvailable = !users.some(user => user.email === args.email)
+      if (!args.data.name && !args.data.email) throw new Error(`Required parameters not provided`)
+      const isEmailAvailable = !users.some(user => user.email === args.data.email)
       if (!isEmailAvailable) throw new Error(`This email is taken`)
 
-      const newUser = { id: uuidv4(), ...args }
+      const newUser = { id: uuidv4(), ...args.data }
 
       users.push(newUser)
       console.log(users)
