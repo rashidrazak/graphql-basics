@@ -20,6 +20,7 @@ const typeDefs = `
   type Mutation {
     createUser(name: String!, email: String!, age: Int): User!
     createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+    createComment(text: String, author: ID!, published: Boolean!, post: ID!): Comment!
   }
 
   type User {
@@ -123,6 +124,24 @@ const resolvers = {
       posts.push(newPost)
       console.log(newPost)
       return newPost
+    },
+    createComment(parent, args, ctx, info) {
+      const userExists = users.some(user => user.id === args.author)
+      if(!userExists) throw new Error(`User not found`)
+      const postExists = posts.some(post => post.id === args.post && post.published)
+      if (!postExists) throw new Error(`Post not found`)
+
+      const newComment = {
+        id: uuidv4(),
+        text: args.text,
+        author: args.author,
+        published: args.published,
+        post: args.post
+      }
+
+      comments.push(newComment)
+      console.log(newComment)
+      return newComment
     }
   },
   Post: {
