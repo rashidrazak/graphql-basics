@@ -1,4 +1,5 @@
 import { GraphQLServer } from 'graphql-yoga'
+import uuidv4 from 'uuid/v4'
 
 import users from './users'
 import posts from './posts'
@@ -14,6 +15,10 @@ const typeDefs = `
     me: User!
     post: Post!
     comment: [Comment!]!
+  }
+
+  type Mutation {
+    createUser(name: String!, email: String!, age: Int): User!
   }
 
   type User {
@@ -83,6 +88,23 @@ const resolvers = {
     },
     comment(parent, args, ctx, info) {
       return comments
+    }
+  },
+  Mutation: {
+    createUser(parent, args, ctx, info) {
+      if (!args.name && !args.email) throw new Error(`Required parameters not provided`)
+      const isEmailAvailable = !users.some(user => user.email === args.email)
+      if (!isEmailAvailable) throw new Error(`This email is taken`)
+
+      const newUser = {
+        id: uuidv4(),
+        name: args.name,
+        email: args.email,
+        age: args.age
+      }
+
+      console.log(users)
+      return newUser
     }
   },
   Post: {
