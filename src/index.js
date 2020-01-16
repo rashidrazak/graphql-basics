@@ -2,6 +2,7 @@ import { GraphQLServer } from 'graphql-yoga'
 
 import users from './users'
 import posts from './posts'
+import comments from './comments'
 
 /**
  * Type Definitions (Schema)
@@ -12,6 +13,7 @@ const typeDefs = `
     posts(query: String): [Post!]!
     me: User!
     post: Post!
+    comment: [Comment!]!
   }
 
   type User {
@@ -28,6 +30,11 @@ const typeDefs = `
     body: String!
     published: Boolean!
     author: User!
+  }
+
+  type Comment {
+    id: ID!
+    text: String!
   }
 `
 
@@ -69,6 +76,9 @@ const resolvers = {
         body: '',
         published: false
       }
+    },
+    comment() {
+      return comments
     }
   },
   Post: {
