@@ -19,14 +19,28 @@ const typeDefs = `
 
   type Mutation {
     createUser(data: CreateUserInput): User!
-    createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-    createComment(text: String, author: ID!, published: Boolean!, post: ID!): Comment!
+    createPost(data: CreatePostInput): Post!
+    createComment(data: CreateCommentInput): Comment!
   }
 
   input CreateUserInput {
     name: String!
     email: String!
     age: Int
+  }
+
+  input CreatePostInput {
+    title: String!
+    body: String!
+    published: Boolean!
+    author: ID!
+  }
+
+  input CreateCommentInput {
+    text: String!
+    author: ID!
+    published: Boolean!
+    post: ID!
   }
 
   type User {
@@ -111,21 +125,21 @@ const resolvers = {
       return newUser
     },
     createPost(parent, args, ctx, info) {
-      const userExists = users.some(user => user.id === args.author)
+      const userExists = users.some(user => user.id === args.data.author)
       if (!userExists) throw new Error(`User not found`)
 
-      const newPost = { id: uuidv4(), ...args }
+      const newPost = { id: uuidv4(), ...args.data }
 
       posts.push(newPost)
       return newPost
     },
     createComment(parent, args, ctx, info) {
-      const userExists = users.some(user => user.id === args.author)
+      const userExists = users.some(user => user.id === args.data.author)
       if(!userExists) throw new Error(`User not found`)
-      const postExists = posts.some(post => post.id === args.post && post.published)
+      const postExists = posts.some(post => post.id === args.data.post && post.published)
       if (!postExists) throw new Error(`Post not found`)
 
-      const newComment = { id: uuidv4(), ...args }
+      const newComment = { id: uuidv4(), ...args.data }
 
       comments.push(newComment)
       return newComment
