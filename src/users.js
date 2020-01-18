@@ -1,7 +1,7 @@
 'use strict'
 
 // Demo user data
-const users = [
+let users = [
   {
     id: '1',
     name: 'Rashid Razak',
@@ -28,4 +28,8 @@ const users = [
   },
 ]
 
-export default users
+function setUsers(newUsers) {
+  users = newUsers
+}
+
+export { users as default, setUsers}

@@ -1,7 +1,7 @@
 'use strict'
 
 // Demo posts data
-const posts = [
+let posts = [
   {
     id: '10',
     title: 'GraphQL 101',
@@ -32,4 +32,8 @@ const posts = [
   },
 ]
 
-export default posts
+function setPosts(newPosts) {
+  posts = newPosts
+}
+
+export { posts as default, setPosts }

@@ -2,8 +2,8 @@ import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
 
 import users from './users'
-import posts from './posts'
-import comments from './comments'
+import posts, { setPosts } from './posts'
+import comments, { setComments } from './comments'
 
 /**
  * Type Definitions (Schema)
@@ -19,6 +19,7 @@ const typeDefs = `
 
   type Mutation {
     createUser(data: CreateUserInput): User!
+    deleteUser(id: ID!): User!
     createPost(data: CreatePostInput): Post!
     createComment(data: CreateCommentInput): Comment!
   }
@@ -123,6 +124,28 @@ const resolvers = {
       users.push(newUser)
       console.log(users)
       return newUser
+    },
+    deleteUser(parent, args, ctx, info) {
+      const userIndex = users.findIndex((user) => user.id === args.id)
+      if (userIndex === -1) throw new Error(`User not found`)
+
+      const deletedUser = users.splice(userIndex, 1)
+      let newPosts, newComments
+
+      newPosts = posts.filter((post) => {
+        const match = post.author === args.id
+        if (match) {
+          newComments = comments.filter(comment => comment.post !== post.id)
+          setComments(newComments)
+        }
+        return !match
+      })
+
+      setPosts(newPosts)
+
+      newComments = comments.filter(comment => comment.author !== args.id)
+      setComments(newComments)
+      return deletedUser[0]
     },
     createPost(parent, args, ctx, info) {
       const userExists = users.some(user => user.id === args.data.author)

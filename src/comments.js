@@ -1,6 +1,6 @@
 'use strict'
 
-const comments = [
+let comments = [
   {
     id: '1',
     text: 'Comment 01',
@@ -10,7 +10,7 @@ const comments = [
   {
     id: '2',
     text: 'Comment 02',
-    author: '2',
+    author: '1',
     post: '11'
   },
   {
@@ -27,4 +27,8 @@ const comments = [
   }
 ]
 
-export default comments
+function setComments(newComments) {
+  comments = newComments
+}
+
+export { comments as default, setComments }
