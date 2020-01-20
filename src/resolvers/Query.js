@@ -17,22 +17,6 @@ const Query = {
       return isTitleMatch || isBodyMatch
     })
   },
-  me() {
-    return {
-      id: '123098',
-      name: 'Rashid Razak',
-      email: 'rashid@gmail.com',
-      age: 29
-    }
-  },
-  post() {
-    return {
-      id: '092',
-      title: 'GraphQL 101',
-      body: '',
-      published: false
-    }
-  },
   comment(parent, args, { db }, info) {
     return db.comments
   }
