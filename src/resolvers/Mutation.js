@@ -54,7 +54,7 @@ const Mutation = {
 
     const newPost = { id: uuidv4(), ...args.data }
 
-    posts.push(newPost)
+    db.posts.push(newPost)
     return newPost
   },
   updatePost(parent, args, { db }, info) {
@@ -85,8 +85,17 @@ const Mutation = {
 
     const newComment = { id: uuidv4(), ...args.data }
 
-    comments.push(newComment)
+    db.comments.push(newComment)
     return newComment
+  },
+  updateComment(parent, args, { db }, info) {
+    const { id, data } = args
+    const comment = db.comments.find(comment => comment.id === id)
+    if (!comment) throw new Error(`Comment not found`)
+
+    if (typeof data.text === 'string') comment.text = data.text
+
+    return comment
   },
   deleteComment(parent, args, { db }, info) {
     const commentIndex = db.comments.findIndex(comment => comment.id === args.id)
