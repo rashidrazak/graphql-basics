@@ -1,11 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
 
-import users from './users'
-import posts, { setPosts } from './posts'
-import comments, { setComments } from './comments'
-
-
 /**
  * Resolvers
  */
