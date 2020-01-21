@@ -55,7 +55,12 @@ const Mutation = {
     const newPost = { id: uuidv4(), ...args.data }
 
     db.posts.push(newPost)
-    if (newPost.published) pubsub.publish(`post`, { post: newPost })
+    if (newPost.published) pubsub.publish(`post`, {
+      post: {
+        mutation: 'CREATED',
+        data: newPost
+      }
+    })
     return newPost
   },
   updatePost(parent, args, { db }, info) {
