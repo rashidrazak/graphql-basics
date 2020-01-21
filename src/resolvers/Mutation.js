@@ -48,13 +48,14 @@ const Mutation = {
     db.comments = db.comments.filter(comment => comment.author !== args.id)
     return deletedUser[0]
   },
-  createPost(parent, args, { db }, info) {
+  createPost(parent, args, { db, pubsub }, info) {
     const userExists = db.users.some(user => user.id === args.data.author)
     if (!userExists) throw new Error(`User not found`)
 
     const newPost = { id: uuidv4(), ...args.data }
 
     db.posts.push(newPost)
+    if (newPost.published) pubsub.publish(`post`, { post: newPost })
     return newPost
   },
   updatePost(parent, args, { db }, info) {
